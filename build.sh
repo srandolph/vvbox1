@@ -48,10 +48,14 @@ echo "Writing Vagrantfile"
 echo ""
 
 cat > Vagrantfile <<EOF
-Vagrant::Config.run do |config|
+VAGRANTFILE_API_VERSION = "2"
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+
   config.vm.host_name = '${vgrthostname}'
+  config.vm.network :private_network, ip: "10.1.0.31"
+  config.ssh.forward_agent = true
   config.vm.box = "precise64"
-  config.vm.box_url = "http://files.vagrantup.com/precise64.box"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/precise/current/precise-server-cloudimg-amd64-vagrant-disk1.box"
   config.vm.provision :shell, :inline => "/usr/bin/apt-get update"
   config.vm.provision :shell, :inline => "/usr/bin/apt-get install -y puppet libaugeas-ruby augeas-tools rubygems"
   config.vm.provision :puppet, :module_path => "modules", :options => "--verbose" do |puppet|
